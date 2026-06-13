@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Phishing Email Scanner</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🛡️ Phishing Email Scanner</h1>
+        <p class="subtitle">SOC-style offline .eml analysis tool</p>
+    </div>
+
+    <div id="drop-zone">
+        <div class="drop-icon">📧</div>
+        <p>Drag & drop a <strong>.eml</strong> file here</p>
+        <p class="or">— or —</p>
+        <label class="browse-btn" for="fileInput">Browse File</label>
+        <input type="file" id="fileInput" accept=".eml" hidden />
+    </div>
+
+    <div id="loading" class="hidden">Scanning...</div>
+
+    <div id="result" class="hidden">
+        <div id="score-bar-wrapper">
+            <div class="score-label">Risk Score: <span id="score-num"></span>/100</div>
+            <div class="bar-track">
+                <div id="score-bar"></div>
+            </div>
+        </div>
+
+        <div id="level-badge"></div>
+
+        <div class="meta">
+            <p><span class="label">Sender:</span> <span id="sender"></span></p>
+            <p><span class="label">Subject:</span> <span id="subject"></span></p>
+        </div>
+
+        <div class="reasons-box">
+            <h3>Flags Detected</h3>
+            <ul id="reasons"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+const dropZone = document.getElementById("drop-zone");
+const fileInput = document.getElementById("fileInput");
+const resultDiv = document.getElementById("result");
+const loadingDiv = document.getElementById("loading");
+
+dropZone.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", () => {
+    if (fileInput.files[0]) uploadFile(fileInput.files[0]);
+});
+
+dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.classList.add("hover");
+});
+
+dropZone.addEventListener("dragleave", () => {
+    dropZone.classList.remove("hover");
+});
+
+dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("hover");
+    const file = e.dataTransfer.files[0];
+    if (file) uploadFile(file);
+});
+
+function uploadFile(file) {
+    loadingDiv.classList.remove("hidden");
+    resultDiv.classList.add("hidden");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/upload", { method: "POST", body: formData })
+        .then(res => res.json())
+        .then(data => {
+            loadingDiv.classList.add("hidden");
+
+            if (data.error) {
+                alert("Error: " + data.error);
+                return;
+            }
+
+            const score = data.score;
+            const level = data.level;
+
+            document.getElementById("score-num").textContent = score;
+
+            const bar = document.getElementById("score-bar");
+            bar.style.width = score + "%";
+            bar.className = "";
+            bar.classList.add(level.toLowerCase());
+
+            const badge = document.getElementById("level-badge");
+            badge.textContent = level;
+            badge.className = "badge " + level.toLowerCase();
+
+            document.getElementById("sender").textContent = data.sender || "Unknown";
+            document.getElementById("subject").textContent = data.subject || "No Subject";
+
+            const reasonsList = document.getElementById("reasons");
+            reasonsList.innerHTML = "";
+
+            if (data.reasons.length === 0) {
+                reasonsList.innerHTML = "<li>No flags detected.</li>";
+            } else {
+                data.reasons.forEach(r => {
+                    const li = document.createElement("li");
+                    li.textContent = r;
+                    reasonsList.appendChild(li);
+                });
+            }
+
+            resultDiv.classList.remove("hidden");
+        })
+        .catch(() => {
+            loadingDiv.classList.add("hidden");
+            alert("Something went wrong. Make sure Flask is running.");
+        });
+}
+</script>
+
+</body>
+</html>
