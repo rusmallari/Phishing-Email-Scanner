@@ -1,30 +1,28 @@
-# Phishing-Email-Scanner
+# Phishing Email Scanner
 
-A web-based tool that analyzes email content for phishing indicators 
-using heuristic detection techniques.
+A modular, web-based phishing detection tool that analyzes `.eml` 
+email files across three detection layers: text heuristics, URL 
+analysis, and email authentication headers.
 
 ## Features
-- Scans email text for suspicious keywords, spoofed domains, and 
-  urgency language patterns
-- Python (Flask) backend with a clean browser-based UI
-- Returns a risk score and breakdown of detected indicators
+- **Text analysis** — detects urgency language, brand impersonation 
+  (PayPal, Microsoft, IRS, Apple, Amazon), and excessive capitalization
+- **URL analysis** — flags IP-based URLs, @ obfuscation tricks, risky 
+  TLDs (.tk .xyz .ru .pw), excessive subdomains, and suspicious 
+  domain keywords
+- **Header analysis** — checks SPF, DKIM, and DMARC authentication 
+  failures
+- **Risk scoring** — weighted 0–100 score with LOW / MEDIUM / HIGH 
+  classification and per-flag breakdown
 
 ## Tech Stack
-- Python · Flask
-- HTML · CSS · JavaScript
+Python · Flask · HTML · CSS · JavaScript
 
-## How It Works
-1. User pastes email content into the web interface
-2. Backend analyzes text against phishing indicator ruleset
-3. Results returned with flagged indicators highlighted
-
-## Detection Methods
-[List what your app.py actually checks for — keywords, URL patterns, 
-sender spoofing, etc.]
-
-## Setup
-pip install -r requirements.txt
+## Setup & Usage
+pip install flask
 python app.py
 
+Then open http://127.0.0.1:5000 and upload any .eml file.
+
 ## MITRE ATT&CK
-Addresses T1566 — Phishing detection and awareness
+Addresses T1566.001 — Spearphishing Attachment detection
