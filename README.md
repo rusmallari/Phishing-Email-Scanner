@@ -116,9 +116,9 @@ Sample `.eml` files for testing can be found at:
 
 ## Screenshots
 
-<img width="325" height="350" alt="Phishing-Email-LOW" src="https://github.com/user-attachments/assets/be5be5f1-4e44-4eb7-8d3f-262cc1592599" />
-<img width="325" height="350" alt="Phishing-Email-MEDIUM" src="https://github.com/user-attachments/assets/a335bdc0-c2dd-430e-be64-67639799fef3" />
-<img width="325" height="350" alt="Phishing-Email-HIGH" src="https://github.com/user-attachments/assets/0a72a5e9-3cf4-45b8-81fa-0b69d3908d47" />
+<img width="312" height="350" alt="Phishing-Email-LOW" src="https://github.com/user-attachments/assets/be5be5f1-4e44-4eb7-8d3f-262cc1592599" />
+<img width="312" height="350" alt="Phishing-Email-MEDIUM" src="https://github.com/user-attachments/assets/a335bdc0-c2dd-430e-be64-67639799fef3" />
+<img width="312" height="350" alt="Phishing-Email-HIGH" src="https://github.com/user-attachments/assets/0a72a5e9-3cf4-45b8-81fa-0b69d3908d47" />
 
 ---
 
